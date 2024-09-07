@@ -1,4 +1,3 @@
-// tasks.js
 import express from "express";
 import cors from "cors";
 import serverless from "serverless-http";
@@ -7,8 +6,6 @@ const app = express();
 app.use(cors());
 
 const router = express.Router();
-
-const port = process.env.PORT || 4004;
 
 // Mock data para tareas
 const tasks = [
@@ -19,7 +16,7 @@ const tasks = [
 ];
 
 // Ruta para obtener las tareas por ID del tablero
-app.get("/tasks", (req, res) => {
+router.get("/tasks", (req, res) => {
   const { boardId } = req.query;
 
   // Validar si boardId fue enviado
@@ -31,7 +28,8 @@ app.get("/tasks", (req, res) => {
   const boardTasks = tasks.filter((task) => task.boardId === Number(boardId));
   res.json(boardTasks);
 });
-// Iniciar servidor en el contexto de Netlify Functions
+
+// Registrar el router
 app.use('/.netlify/functions/server', router);
 
 export const handler = serverless(app);
