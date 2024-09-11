@@ -16,7 +16,6 @@
     "express": "^4.19.2",
     "firebase-admin": "^12.4.0",
     "http-proxy-middleware": "^3.0.2",
-    "mysql2": "^3.11.2",
     "serverless-http": "^3.2.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
