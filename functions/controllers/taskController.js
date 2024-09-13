@@ -9,7 +9,8 @@ export const fetchTasks = async (req, res) => {
     }
 
     try {
-        const tasks = await getTasksByBoardId(boardId);
+        // Convertir boardId a número si es necesario
+        const tasks = await getTasksByBoardId(parseInt(boardId, 10));
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks:", error);
