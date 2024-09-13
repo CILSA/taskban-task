@@ -4,7 +4,7 @@ import { open } from 'sqlite';
 
 // Configuración de la base de datos SQLite
 const dbPromise = open({
-    filename: './functions/models/database.sqlite',
+    filename: './functions/database.sqlite',
     driver: sqlite3.Database
 });
 
