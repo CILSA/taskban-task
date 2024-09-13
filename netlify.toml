@@ -2,5 +2,4 @@
     functions = "functions"
 
 [functions]
-  directory = "functions"
   include = ["./functions/database.sqlite"] 
