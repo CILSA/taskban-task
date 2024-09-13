@@ -2,4 +2,4 @@
   functions = "functions"
 
 [functions]
-  included_files = ["functions/database.sqlite"]
+  included_files = ["functions/tasks.json"]
