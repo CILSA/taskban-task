@@ -1,6 +1,12 @@
-// controllers/taskController.js
-import { getTasksByBoardId, createTask } from "../models/taskModel.js";
+import {
+    getTasksByBoardId,
+    createTask,
+    getTaskById,
+    updateTask,
+    deleteTask
+} from "../models/taskModel.js";
 
+// Obtener tareas por ID del tablero
 export const fetchTasks = async (req, res) => {
     const { boardId } = req.query;
 
@@ -9,8 +15,7 @@ export const fetchTasks = async (req, res) => {
     }
 
     try {
-        // Convertir boardId a número si es necesario
-        const tasks = await getTasksByBoardId(parseInt(boardId, 10));
+        const tasks = await getTasksByBoardId(boardId); // No es necesario parsear boardId ya que Firestore usa strings
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -18,6 +23,28 @@ export const fetchTasks = async (req, res) => {
     }
 };
 
+// Obtener una tarea por ID
+export const fetchTaskById = async (req, res) => {
+    const { taskId } = req.params;
+
+    if (!taskId) {
+        return res.status(400).json({ message: "Task ID is required" });
+    }
+
+    try {
+        const task = await getTaskById(taskId);
+        if (task) {
+            res.json(task);
+        } else {
+            res.status(404).json({ message: "Task not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching task:", error);
+        res.status(500).json({ message: "Error fetching task" });
+    }
+};
+
+// Crear una nueva tarea
 export const addTask = async (req, res) => {
     const { titulo, descripcion, fechaCreacion, fechaVencimiento, boardId } = req.body;
 
@@ -31,5 +58,45 @@ export const addTask = async (req, res) => {
     } catch (error) {
         console.error("Error creating task:", error);
         res.status(500).json({ message: "Error creating task" });
+    }
+};
+
+// Actualizar una tarea existente
+export const updateTaskById = async (req, res) => {
+    const { taskId } = req.params;
+    const { titulo, descripcion, fechaVencimiento, estado } = req.body;
+
+    if (!taskId) {
+        return res.status(400).json({ message: "Task ID is required" });
+    }
+
+    try {
+        const updatedTask = { titulo, descripcion, fechaVencimiento, estado };
+
+        // Filtrar campos no provistos
+        Object.keys(updatedTask).forEach(key => updatedTask[key] === undefined && delete updatedTask[key]);
+
+        await updateTask(taskId, updatedTask);
+        res.status(200).json({ message: "Task updated" });
+    } catch (error) {
+        console.error("Error updating task:", error);
+        res.status(500).json({ message: "Error updating task" });
+    }
+};
+
+// Eliminar una tarea por ID
+export const deleteTaskById = async (req, res) => {
+    const { taskId } = req.params;
+
+    if (!taskId) {
+        return res.status(400).json({ message: "Task ID is required" });
+    }
+
+    try {
+        await deleteTask(taskId);
+        res.status(200).json({ message: "Task deleted" });
+    } catch (error) {
+        console.error("Error deleting task:", error);
+        res.status(500).json({ message: "Error deleting task" });
     }
 };
