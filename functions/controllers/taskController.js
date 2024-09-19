@@ -23,7 +23,6 @@ export const fetchTasks = async (req, res) => {
     }
 };
 
-
 // Obtener una tarea por ID
 export const fetchTaskById = async (req, res) => {
     const { taskId } = req.params;
@@ -59,7 +58,8 @@ export const addTask = async (req, res) => {
         status,
         points,
         estimatedStartDate,
-        estimatedFinishDate
+        estimatedFinishDate,
+        userAssigned // Nuevo campo para el usuario asignado
     } = req.body;
 
     // Validación de los campos obligatorios
@@ -80,7 +80,8 @@ export const addTask = async (req, res) => {
             status,
             points,
             estimatedStartDate,
-            estimatedFinishDate
+            estimatedFinishDate,
+            userAssigned // Incluir el usuario asignado en la nueva tarea
         };
 
         const taskId = await createTask(newTask);
@@ -90,7 +91,6 @@ export const addTask = async (req, res) => {
         res.status(500).json({ message: "Error creating task" });
     }
 };
-
 
 // Actualizar una tarea existente
 export const updateTaskById = async (req, res) => {
@@ -104,7 +104,8 @@ export const updateTaskById = async (req, res) => {
         status,
         points,
         estimatedStartDate,
-        estimatedFinishDate
+        estimatedFinishDate,
+        userAssigned // Nuevo campo para el usuario asignado
     } = req.body;
 
     if (!taskId) {
@@ -121,7 +122,8 @@ export const updateTaskById = async (req, res) => {
             status,
             points,
             estimatedStartDate,
-            estimatedFinishDate
+            estimatedFinishDate,
+            userAssigned // Incluir el usuario asignado en la tarea actualizada
         };
 
         // Filtrar campos no provistos
