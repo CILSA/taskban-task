@@ -15,6 +15,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Obtener tareas por ID del usuario
+export const getTasksByUserId = async (userId) => {
+    try {
+        const tasksCollection = collection(db, 'tasks');
+        const q = query(tasksCollection, where('tutorUser', '==', userId));
+        const tasksSnapshot = await getDocs(q);
+        const tasksList = tasksSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return tasksList;
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        throw error;
+    }
+};
+
 // Obtener tareas por ID del board
 export const getTasksByBoardId = async (boardId) => {
     try {

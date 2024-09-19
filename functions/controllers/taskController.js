@@ -1,10 +1,27 @@
 import {
     getTasksByBoardId,
+    getTasksByUserId,
     createTask,
     getTaskById,
     updateTask,
     deleteTask
 } from "../models/taskModel.js";
+
+export const fetchUserTasks = async (req, res) => {
+    const { userId } = req.query; // Obteniendo el boardId de los query params
+
+    if (!userId) {
+        return res.status(400).json({ message: "user ID is required" });
+    }
+
+    try {
+        const tasks = await getTasksByUserId(userId);
+        res.json(tasks);
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ message: "Error fetching tasks" });
+    }
+};
 
 // Obtener tareas por ID del tablero
 export const fetchTasks = async (req, res) => {
