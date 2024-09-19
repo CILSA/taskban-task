@@ -8,7 +8,7 @@ import {
 
 // Obtener tareas por ID del tablero
 export const fetchTasks = async (req, res) => {
-    const { boardId } = req.query;
+    const { boardId } = req.query; // Obteniendo el boardId de los query params
 
     if (!boardId) {
         return res.status(400).json({ message: "Board ID is required" });
@@ -22,6 +22,7 @@ export const fetchTasks = async (req, res) => {
         res.status(500).json({ message: "Error fetching tasks" });
     }
 };
+
 
 // Obtener una tarea por ID
 export const fetchTaskById = async (req, res) => {
@@ -61,18 +62,35 @@ export const addTask = async (req, res) => {
         estimatedFinishDate
     } = req.body;
 
+    // Validación de los campos obligatorios
     if (!name || !description || !boardId || !createdUser || !createdDate) {
         return res.status(400).json({ message: "All required fields must be filled" });
     }
 
     try {
-        const taskId = await createTask(req.body);
+        const newTask = {
+            name,
+            description,
+            boardId,
+            columnId,
+            createdUser,
+            createdDate,
+            userInvolved,
+            tutorUser,
+            status,
+            points,
+            estimatedStartDate,
+            estimatedFinishDate
+        };
+
+        const taskId = await createTask(newTask);
         res.status(201).json({ message: "Task created", taskId });
     } catch (error) {
         console.error("Error creating task:", error);
         res.status(500).json({ message: "Error creating task" });
     }
 };
+
 
 // Actualizar una tarea existente
 export const updateTaskById = async (req, res) => {
