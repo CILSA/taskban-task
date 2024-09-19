@@ -15,7 +15,7 @@ export const fetchTasks = async (req, res) => {
     }
 
     try {
-        const tasks = await getTasksByBoardId(boardId); // No es necesario parsear boardId ya que Firestore usa strings
+        const tasks = await getTasksByBoardId(boardId);
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -46,10 +46,23 @@ export const fetchTaskById = async (req, res) => {
 
 // Crear una nueva tarea
 export const addTask = async (req, res) => {
-    const { titulo, descripcion, fechaCreacion, fechaVencimiento, boardId } = req.body;
+    const {
+        name,
+        description,
+        boardId,
+        columnId,
+        createdUser,
+        createdDate,
+        userInvolved,
+        tutorUser,
+        status,
+        points,
+        estimatedStartDate,
+        estimatedFinishDate
+    } = req.body;
 
-    if (!titulo || !descripcion || !fechaCreacion || !boardId) {
-        return res.status(400).json({ message: "All fields are required" });
+    if (!name || !description || !boardId || !createdUser || !createdDate) {
+        return res.status(400).json({ message: "All required fields must be filled" });
     }
 
     try {
@@ -64,14 +77,34 @@ export const addTask = async (req, res) => {
 // Actualizar una tarea existente
 export const updateTaskById = async (req, res) => {
     const { taskId } = req.params;
-    const { titulo, descripcion, fechaVencimiento, estado } = req.body;
+    const {
+        name,
+        description,
+        columnId,
+        userInvolved,
+        tutorUser,
+        status,
+        points,
+        estimatedStartDate,
+        estimatedFinishDate
+    } = req.body;
 
     if (!taskId) {
         return res.status(400).json({ message: "Task ID is required" });
     }
 
     try {
-        const updatedTask = { titulo, descripcion, fechaVencimiento, estado };
+        const updatedTask = {
+            name,
+            description,
+            columnId,
+            userInvolved,
+            tutorUser,
+            status,
+            points,
+            estimatedStartDate,
+            estimatedFinishDate
+        };
 
         // Filtrar campos no provistos
         Object.keys(updatedTask).forEach(key => updatedTask[key] === undefined && delete updatedTask[key]);
